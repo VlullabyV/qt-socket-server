@@ -54,8 +54,7 @@ void SslServer::incomingConnection(qintptr socketDescriptor)
 void SslServer::incomingConnection(int socketDescriptor)
 #endif
 {
-    std::cout << "CONEXAO INICIADA!!\n";
-    qDebug() << Q_FUNC_INFO;
+    qDebug() << "INFO DA FUNCAO: " << Q_FUNC_INFO;
 
     d->sock = new QSslSocket(this);
     if (!d->sock->setSocketDescriptor(socketDescriptor)) {

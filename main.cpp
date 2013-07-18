@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     QSslCertificate cert(&certFile);
     QSslKey key(&keyFile, QSsl::Rsa);
 
-    SslServer server(cert, key);
+    SslServer server(cert, key, 443);
 
     return app.exec();
 }

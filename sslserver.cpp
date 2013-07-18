@@ -21,9 +21,9 @@ SslServer::SslServer(const QSslCertificate &cert, const QSslKey &key, int port)
     d->key = key;
     d->sock = 0;
 
-    connect(this, SIGNAL(newConnection()), this, SLOT(throwNewConnection());
+    connect(this, SIGNAL(newConnection()), this, SLOT(throwNewConnection()));
 
-    listen(QHostAddress::LocalHost, 443);
+    listen(QHostAddress::LocalHost, port);
 }
 
 SslServer::~SslServer()

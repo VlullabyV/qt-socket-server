@@ -9,7 +9,6 @@
 
 int main(int argc, char **argv)
 {
-    std::cout <<  "Entrei no main\n";
     QCoreApplication app(argc, argv);
 
     QFile certFile(argv[1]);
@@ -27,6 +26,8 @@ int main(int argc, char **argv)
     QSslCertificate cert(&certFile);
     QSslKey key(&keyFile, QSsl::Rsa);
     SslServer server(cert, key, 443);
+
+    qDebug() <<  "Server started";
 
     return app.exec();
 }

@@ -19,6 +19,7 @@ public:
 
 protected slots:
     void ready();
+    void showAllConnectionErrors(const QList<QSslError> &errors);
 
 protected:
 #if QT_VERSION >= 0x050000

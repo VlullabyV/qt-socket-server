@@ -43,23 +43,31 @@ void SslServer::ready()
     d->sock->close();
 }
 
+void SslServer::showAllConnectionErrors(const QList<QSslError> &errors)
+{
+    foreach(const QSslError &error, errors){
+        qDebug() << "[ERROR] Error on socket: " << error.errorString();
+    }
+}
+
 #if QT_VERSION >= 0x050000
 void SslServer::incomingConnection(qintptr socketDescriptor)
 #else
 void SslServer::incomingConnection(int socketDescriptor)
 #endif
 {
-    qDebug() << "USED INCOMING CONNECTION FUNCTION: " << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
 
     d->sock = new QSslSocket(this);
     if (!d->sock->setSocketDescriptor(socketDescriptor)) {
-        qDebug() << "Unable set socket descriptor";
+        qDebug() << "[ERROR] Unable set socket descriptor";
 
         delete d->sock;
         d->sock = 0;
         return;
     }
     connect(d->sock, SIGNAL(encrypted()), this, SLOT(ready()));
+    connect(d->sock, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(showAllConnectionErrors(QList<QSslError>)));
 
     d->sock->setLocalCertificate(d->cert);
     d->sock->setPrivateKey(d->key);

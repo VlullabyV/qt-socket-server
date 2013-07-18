@@ -21,8 +21,6 @@ SslServer::SslServer(const QSslCertificate &cert, const QSslKey &key, int port)
     d->key = key;
     d->sock = 0;
 
-    connect(this, SIGNAL(newConnection()), this, SLOT(throwNewConnection()));
-
     listen(QHostAddress::LocalHost, port);
 }
 
@@ -31,16 +29,13 @@ SslServer::~SslServer()
     delete d;
 }
 
-void SslServer::throwNewConnection(){
-  qDebug() << "---->>>>> Nova conexao";
-
-}
-
 void SslServer::ready()
 {
-    qDebug() << Q_FUNC_INFO;
+
+    qDebug() << Q_FUNC_INFO << "Secure connection functions";
 
     d->sock->write("This message is encrypted\n");
+    d->sock->flush();
 
     // Slightly evil, but since want to close immediately in this example
     // we aren't going to wait for the main event loop.
@@ -54,7 +49,7 @@ void SslServer::incomingConnection(qintptr socketDescriptor)
 void SslServer::incomingConnection(int socketDescriptor)
 #endif
 {
-    qDebug() << "INFO DA FUNCAO: " << Q_FUNC_INFO;
+    qDebug() << "USED INCOMING CONNECTION FUNCTION: " << Q_FUNC_INFO;
 
     d->sock = new QSslSocket(this);
     if (!d->sock->setSocketDescriptor(socketDescriptor)) {
@@ -64,12 +59,10 @@ void SslServer::incomingConnection(int socketDescriptor)
         d->sock = 0;
         return;
     }
-
     connect(d->sock, SIGNAL(encrypted()), this, SLOT(ready()));
 
     d->sock->setLocalCertificate(d->cert);
     d->sock->setPrivateKey(d->key);
-
     d->sock->startServerEncryption();
 }
 

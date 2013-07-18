@@ -19,7 +19,6 @@ public:
 
 protected slots:
     void ready();
-    void throwNewConnection();
 
 protected:
 #if QT_VERSION >= 0x050000
